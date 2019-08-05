@@ -3,12 +3,15 @@ package dev.pardo.dice.ui
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
+import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.seismic.ShakeDetector
 import dev.pardo.dice.App
 import dev.pardo.dice.Drawables
 import dev.pardo.dice.R
@@ -17,7 +20,7 @@ import oolong.Dispatch
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.random.Random
 
-class MainActivity : Activity() {
+class MainActivity : Activity(), ShakeDetector.Listener {
 
     private val containerView by lazy(NONE) { findViewById<View>(R.id.container_view) }
     private val historyRecyclerView by lazy(NONE) { findViewById<RecyclerView>(R.id.history_recycler_view) }
@@ -26,9 +29,15 @@ class MainActivity : Activity() {
 
     private val historyAdapter = HistoryAdapter()
 
+    private var onShake: () -> Unit = {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        val shakeDetector = ShakeDetector(this)
+        shakeDetector.start(sensorManager)
 
         historyRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         historyRecyclerView.itemAnimator = HistoryItemAnimator()
@@ -48,6 +57,10 @@ class MainActivity : Activity() {
     private fun render(props: Dice.Props, dispatch: Dispatch<Dice.Msg>) {
         containerView.setOnClickListener {
             dispatch(props.onUserClickedRollButton())
+        }
+
+        onShake = {
+            dispatch(props.onUserShookDevice())
         }
 
         historyAdapter.items = props.rolls.dropLast(1)
@@ -86,6 +99,10 @@ class MainActivity : Activity() {
             helpTextView.visibility = View.VISIBLE
             faceImageView.visibility = View.GONE
         }
+    }
+
+    override fun hearShake() {
+        onShake()
     }
 
 }

@@ -37,4 +37,8 @@ object Oolong : Group("org.oolong-kt", "2.0.1") {
     val Core = artifact("oolong")
 }
 
+object Square {
+    val Seismic = dependency("com.squareup", "seismic", "1.0.2")
+}
+
 

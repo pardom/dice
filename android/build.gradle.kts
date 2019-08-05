@@ -38,4 +38,5 @@ dependencies {
     implementation(deps.ItemAnimators)
     implementation(deps.Kotlin.StdLib.Jvm)
     implementation(deps.Kotlin.Coroutines.Android)
+    implementation(deps.Square.Seismic)
 }
