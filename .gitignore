@@ -1,0 +1,11 @@
+# Editors
+.idea/
+*.iml
+xcuserdata/
+
+# Gradle
+.gradle
+build/
+
+# OS
+.DS_Store
