@@ -1,5 +1,7 @@
 package dev.pardo.dice.ui
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
@@ -14,7 +16,6 @@ import dev.pardo.dice.app.Dice
 import oolong.Dispatch
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 class MainActivity : Activity() {
 
@@ -55,8 +56,31 @@ class MainActivity : Activity() {
         if (face != null) {
             helpTextView.visibility = View.GONE
             faceImageView.visibility = View.VISIBLE
-            faceImageView.setImageResource(Drawables.DIE_FACES[face - 1])
-            val faces = (1..5).map { Random.nextInt(1..6) } + face
+
+            val rotation = Random.nextInt(360, 720).toFloat()
+            val maxTranslation = (containerView.width / 4)
+            val translationX = Random.nextInt(-maxTranslation, maxTranslation).toFloat()
+            val translationY = Random.nextInt(-maxTranslation, maxTranslation).toFloat()
+
+            val rotations = (rotation / 360).toInt()
+            val faces = (0..rotations * 2).map { it.rem(6) + 1 }.shuffled() + face
+
+            faceImageView.animate()
+                .setDuration(1000)
+                .rotationBy(rotation)
+                .translationX(translationX)
+                .translationY(translationY)
+                .setUpdateListener { animator ->
+                    val index = (faces.size * animator.animatedFraction).toInt().coerceAtMost(faces.size - 1)
+                    val nextFace = faces[index]
+                    faceImageView.setImageResource(Drawables.DIE_FACES[nextFace - 1])
+                }
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator?) {
+                        faceImageView.setImageResource(Drawables.DIE_FACES[face - 1])
+                    }
+                })
+                .start()
 
         } else {
             helpTextView.visibility = View.VISIBLE
