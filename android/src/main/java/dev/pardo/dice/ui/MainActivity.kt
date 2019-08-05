@@ -71,7 +71,7 @@ class MainActivity : Activity(), ShakeDetector.Listener {
             faceImageView.visibility = View.VISIBLE
 
             val rotation = Random.nextInt(360, 720).toFloat()
-            val maxTranslation = (containerView.width / 4)
+            val maxTranslation = (containerView.width / 4).coerceAtLeast(100)
             val translationX = Random.nextInt(-maxTranslation, maxTranslation).toFloat()
             val translationY = Random.nextInt(-maxTranslation, maxTranslation).toFloat()
 

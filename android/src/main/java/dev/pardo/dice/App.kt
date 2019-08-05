@@ -11,9 +11,14 @@ class App : Application() {
 
     init {
         INSTANCE = this
-        Oolong.runtime(
-            Inject.init,
-            Inject.update,
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        val inject = Inject(applicationContext)
+        val dispose = Oolong.runtime(
+            inject.init,
+            inject.update,
             Dice.view,
             renderProxy.render
         )
