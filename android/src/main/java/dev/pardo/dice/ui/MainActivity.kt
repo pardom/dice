@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,7 +17,6 @@ import dev.pardo.dice.R
 import dev.pardo.dice.app.Dice
 import oolong.Dispatch
 import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.random.Random
 
 class MainActivity : Activity(), ShakeDetector.Listener {
 
@@ -70,30 +68,22 @@ class MainActivity : Activity(), ShakeDetector.Listener {
             helpTextView.visibility = View.GONE
             faceImageView.visibility = View.VISIBLE
 
-            val rotation = Random.nextInt(360, 720).toFloat()
-            val maxTranslation = (containerView.width / 4).coerceAtLeast(100)
-            val translationX = Random.nextInt(-maxTranslation, maxTranslation).toFloat()
-            val translationY = Random.nextInt(-maxTranslation, maxTranslation).toFloat()
-
-            val rotations = (rotation / 360).toInt()
-            val faces = (0..rotations * 2).map { it.rem(6) + 1 }.shuffled() + face
-
             faceImageView.animate()
-                .setDuration(1000)
-                .rotationBy(rotation)
-                .translationX(translationX)
-                .translationY(translationY)
+                .rotation(180F)
                 .setUpdateListener { animator ->
-                    val index = (faces.size * animator.animatedFraction).toInt().coerceAtMost(faces.size - 1)
-                    val nextFace = faces[index]
-                    faceImageView.setImageResource(Drawables.DIE_FACES[nextFace - 1])
-                }
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator?) {
+                    if (animator.animatedFraction >= 0.5F) {
                         faceImageView.setImageResource(Drawables.DIE_FACES[face - 1])
                     }
+                }
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationCancel(animation: Animator?) {
+                        faceImageView.rotation = 0F
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        faceImageView.rotation = 0F
+                    }
                 })
-                .start()
 
         } else {
             helpTextView.visibility = View.VISIBLE

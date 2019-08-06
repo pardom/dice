@@ -12,6 +12,11 @@ kotlin {
     jvm()
     iosX64()
 
+    cocoapods {
+        summary = "Dice"
+        homepage = "https://github.com/pardom/dice"
+    }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
