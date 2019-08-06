@@ -20,7 +20,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(deps.Oolong.Core)
+                api(deps.Oolong)
                 implementation(deps.Kotlin.StdLib.Common)
             }
         }

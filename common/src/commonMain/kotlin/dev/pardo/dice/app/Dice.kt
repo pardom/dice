@@ -51,12 +51,12 @@ object Dice {
                     }
                 }
                 is Msg.SetRolls -> {
-                    model.copy(rolls = msg.rolls) to none()
+                    model.copy(rolls = msg.rolls.takeLast(5)) to none()
                 }
                 is Msg.AddRoll -> {
-                    val rolls = model.rolls + msg.roll
+                    val rolls = (model.rolls + msg.roll).takeLast(5)
                     model.copy(rolls = rolls) to effect {
-                        putHistory(rolls.takeLast(10))
+                        putHistory(rolls)
                     }
                 }
             }

@@ -32,11 +32,22 @@ android {
 }
 
 dependencies {
+    kapt(deps.Facebook.Litho.Processor)
+    kapt(deps.Facebook.Litho.Sections.Processor)
+
     implementation(project(":common"))
+
     implementation(deps.Android.Material)
     implementation(deps.Android.RecyclerView)
+    implementation(deps.Facebook.Litho.Core)
+    implementation(deps.Facebook.Litho.Widget)
     implementation(deps.ItemAnimators)
     implementation(deps.Kotlin.StdLib.Jvm)
     implementation(deps.Kotlin.Coroutines.Android)
     implementation(deps.Square.Seismic)
+
+    debugImplementation(deps.Facebook.Flipper.Debug)
+    debugImplementation(deps.Facebook.SoLoader)
+
+    releaseImplementation(deps.Facebook.Flipper.Release)
 }

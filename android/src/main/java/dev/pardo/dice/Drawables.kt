@@ -2,7 +2,11 @@ package dev.pardo.dice
 
 object Drawables {
 
-    val DIE_FACES = listOf(
+    fun dieFace(dieFace: Int): Int {
+        return DIE_FACES[dieFace - 1]
+    }
+
+    private val DIE_FACES = listOf(
         R.drawable.ic_die_face_1_24dp,
         R.drawable.ic_die_face_2_24dp,
         R.drawable.ic_die_face_3_24dp,

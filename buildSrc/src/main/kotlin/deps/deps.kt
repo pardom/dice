@@ -1,6 +1,7 @@
 package deps
 
 val ItemAnimators = dependency("com.mikepenz", "itemanimators", "1.1.0")
+val Oolong = dependency("org.oolong-kt", "oolong", "2.0.1")
 
 object Android {
     val Material = dependency("com.google.android.material", "material", "1.1.0-alpha09")
@@ -9,6 +10,28 @@ object Android {
     object Gradle : Group("com.android.tools.build", "3.4.2") {
         val Plugin = artifact("gradle")
     }
+}
+
+object Facebook {
+    object Flipper : Group("com.facebook.flipper", "0.23.4") {
+        val Debug = artifact("flipper")
+        val Release = artifact("flipper-noop")
+    }
+
+    object Litho : Group("com.facebook.litho", "0.29.0") {
+        val Core = artifact("litho-core")
+        val Processor = artifact("litho-processor")
+        val Widget = artifact("litho-widget")
+
+        object Sections {
+            val Annotations = artifact("litho-sections-annotations")
+            val Core = artifact("litho-sections-core")
+            val Processor = artifact("litho-sections-processor")
+            val Widget = artifact("litho-sections-widget")
+        }
+    }
+
+    val SoLoader = dependency("com.facebook.soloader", "soloader", "0.6.1")
 }
 
 object Kotlin : Group("org.jetbrains.kotlin", "1.3.41") {
@@ -31,10 +54,6 @@ object Kotlin : Group("org.jetbrains.kotlin", "1.3.41") {
         val Jvm = artifact("kotlin-test")
         val JUnit5 = artifact("kotlin-test-junit5")
     }
-}
-
-object Oolong : Group("org.oolong-kt", "2.0.1") {
-    val Core = artifact("oolong")
 }
 
 object Square {
