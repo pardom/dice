@@ -1,5 +1,7 @@
 package dev.pardo.dice.data
 
-typealias GetHistory = () -> List<Int>
+import dev.pardo.dice.app.Roll
 
-typealias PutHistory = (List<Int>) -> Unit
+typealias GetHistory = () -> List<Roll>
+
+typealias PutHistory = (List<Roll>) -> Unit

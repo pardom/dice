@@ -1,7 +1,7 @@
 package deps
 
-val ItemAnimators = dependency("com.mikepenz", "itemanimators", "1.1.0")
 val Oolong = dependency("org.oolong-kt", "oolong", "2.0.1")
+val UUID = dependency("com.benasher44", "uuid", "0.0.3")
 
 object Android {
     val Material = dependency("com.google.android.material", "material", "1.1.0-alpha09")
@@ -55,9 +55,3 @@ object Kotlin : Group("org.jetbrains.kotlin", "1.3.41") {
         val JUnit5 = artifact("kotlin-test-junit5")
     }
 }
-
-object Square {
-    val Seismic = dependency("com.squareup", "seismic", "1.0.2")
-}
-
-

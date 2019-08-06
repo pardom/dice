@@ -22,6 +22,7 @@ kotlin {
             dependencies {
                 api(deps.Oolong)
                 implementation(deps.Kotlin.StdLib.Common)
+                implementation(deps.UUID)
             }
         }
         val commonTest by getting {

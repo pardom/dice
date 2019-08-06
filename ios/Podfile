@@ -1,0 +1,4 @@
+target 'dice' do
+  use_frameworks!
+  pod 'common', :path => '../common'
+end

@@ -1,5 +1,6 @@
 package dev.pardo.dice.app
 
+import com.benasher44.uuid.Uuid
 import dev.pardo.dice.data.GetHistory
 import dev.pardo.dice.data.PutHistory
 import kotlinx.coroutines.delay
@@ -14,18 +15,18 @@ import kotlin.random.nextInt
 object Dice {
 
     data class Model(
-        val rolls: List<Int>
+        val rolls: List<Roll>
     )
 
     sealed class Msg {
         object UserShookDevice : Msg()
         object UserClickedRollButton : Msg()
-        data class SetRolls(val rolls: List<Int>) : Msg()
-        data class AddRoll(val roll: Int) : Msg()
+        data class SetRolls(val rolls: List<Roll>) : Msg()
+        data class AddRoll(val roll: Roll) : Msg()
     }
 
     data class Props(
-        val rolls: List<Int>,
+        val rolls: List<Roll>,
         val onUserShookDevice: () -> Msg,
         val onUserClickedRollButton: () -> Msg
     )
@@ -45,8 +46,11 @@ object Dice {
                 Msg.UserShookDevice,
                 Msg.UserClickedRollButton -> {
                     model to { dispatch ->
-                        val roll = Random.nextInt(1..6)
                         delay(100)
+                        val roll = Roll(
+                            Uuid(),
+                            Random.nextInt(1..6)
+                        )
                         dispatch(Msg.AddRoll(roll))
                     }
                 }

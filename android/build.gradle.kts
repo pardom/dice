@@ -41,10 +41,9 @@ dependencies {
     implementation(deps.Android.RecyclerView)
     implementation(deps.Facebook.Litho.Core)
     implementation(deps.Facebook.Litho.Widget)
-    implementation(deps.ItemAnimators)
     implementation(deps.Kotlin.StdLib.Jvm)
     implementation(deps.Kotlin.Coroutines.Android)
-    implementation(deps.Square.Seismic)
+    implementation(deps.UUID)
 
     debugImplementation(deps.Facebook.Flipper.Debug)
     debugImplementation(deps.Facebook.SoLoader)
