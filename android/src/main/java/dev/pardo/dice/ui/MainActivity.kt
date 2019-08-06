@@ -27,6 +27,7 @@ class MainActivity : Activity(), ShakeDetector.Listener {
 
     private val historyAdapter = HistoryAdapter()
 
+    private var isAnimating = false
     private var onShake: () -> Unit = {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,11 +55,15 @@ class MainActivity : Activity(), ShakeDetector.Listener {
 
     private fun render(props: Dice.Props, dispatch: Dispatch<Dice.Msg>) {
         containerView.setOnClickListener {
-            dispatch(props.onUserClickedRollButton())
+            if (!isAnimating) {
+                dispatch(props.onUserClickedRollButton())
+            }
         }
 
         onShake = {
-            dispatch(props.onUserShookDevice())
+            if (!isAnimating) {
+                dispatch(props.onUserShookDevice())
+            }
         }
 
         historyAdapter.items = props.rolls.dropLast(1)
@@ -76,11 +81,12 @@ class MainActivity : Activity(), ShakeDetector.Listener {
                     }
                 }
                 .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationCancel(animation: Animator?) {
-                        faceImageView.rotation = 0F
+                    override fun onAnimationStart(animation: Animator?) {
+                        isAnimating = true
                     }
 
                     override fun onAnimationEnd(animation: Animator?) {
+                        isAnimating = false
                         faceImageView.rotation = 0F
                     }
                 })
