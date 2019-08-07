@@ -10,7 +10,13 @@ repositories {
 
 kotlin {
     jvm()
-    iosX64()
+    iosX64 {
+        binaries {
+            all {
+                freeCompilerArgs.add("-Xobjc-generics")
+            }
+        }
+    }
 
     cocoapods {
         summary = "Dice"

@@ -1,5 +1,6 @@
 package dev.pardo.dice.app
 
+import com.benasher44.uuid.Uuid
 import dev.pardo.dice.app.Dice.Model
 import dev.pardo.dice.app.Dice.Msg
 import dev.pardo.dice.app.Dice.makeUpdate
@@ -10,15 +11,16 @@ import kotlin.test.assertEquals
 
 class DiceTest {
 
-    private val getHistory: GetHistory = { listOf(1, 2, 3) }
+    private val getHistory: GetHistory = { stubRolls(3) }
     private val putHistory: PutHistory = { }
 
     @Test
     fun `SetRolls updates roll list`() {
+        val rolls = stubRolls(3)
         val update = makeUpdate(putHistory)
         val model = Model(emptyList())
-        val next = update(Msg.SetRolls(listOf(1, 2, 3)), model)
-        assertEquals(next.first.rolls, listOf(1, 2, 3))
+        val next = update(Msg.SetRolls(rolls), model)
+        assertEquals(next.first.rolls, rolls)
     }
 
     @Test
@@ -26,14 +28,25 @@ class DiceTest {
         val update = makeUpdate(putHistory)
         val model = Model(emptyList())
 
-        val next1 = update(Msg.AddRoll(1), model)
-        assertEquals(next1.first.rolls, listOf(1))
+        val roll1 = stubRoll(1)
+        val next1 = update(Msg.AddRoll(roll1), model)
+        assertEquals(next1.first.rolls, listOf(roll1))
 
-        val next2 = update(Msg.AddRoll(2), model)
-        assertEquals(next2.first.rolls, listOf(1, 2))
+        val roll2 = stubRoll(2)
+        val next2 = update(Msg.AddRoll(roll2), model)
+        assertEquals(next2.first.rolls, listOf(roll1, roll2))
 
-        val next3 = update(Msg.AddRoll(3), model)
-        assertEquals(next3.first.rolls, listOf(1, 2, 3))
+        val roll3 = stubRoll(3)
+        val next3 = update(Msg.AddRoll(roll3), model)
+        assertEquals(next3.first.rolls, listOf(roll1, roll2, roll3))
+    }
+
+    private fun stubRolls(count: Int): List<Roll> {
+        return (1..count).map(::stubRoll)
+    }
+
+    private fun stubRoll(face: Int): Roll {
+        return Roll(Uuid(), face)
     }
 
 }

@@ -15,7 +15,8 @@ import kotlin.random.nextInt
 object Dice {
 
     data class Model(
-        val rolls: List<Roll>
+        val rolls: List<Roll> = emptyList(),
+        val rollCount: Int = 0
     )
 
     sealed class Msg {
@@ -27,13 +28,14 @@ object Dice {
 
     data class Props(
         val rolls: List<Roll>,
+        val rollCount: Int,
         val onUserShookDevice: () -> Msg,
         val onUserClickedRollButton: () -> Msg
     )
 
     val makeInit: (GetHistory) -> Init<Model, Msg> = { getHistory ->
         {
-            Model(emptyList()) to { dispatch ->
+            Model() to { dispatch ->
                 val history = getHistory()
                 dispatch(Msg.SetRolls(history))
             }
@@ -45,23 +47,24 @@ object Dice {
             when (msg) {
                 Msg.UserShookDevice,
                 Msg.UserClickedRollButton -> {
-                    model to { dispatch ->
+                    model.copy(
+                        rollCount = model.rollCount + 1
+                    ) to effect { dispatch ->
                         delay(100)
-                        val roll = Roll(
-                            Uuid(),
-                            Random.nextInt(1..6)
-                        )
+                        val roll = Roll(Uuid(), Random.nextInt(1..6))
                         dispatch(Msg.AddRoll(roll))
                     }
                 }
                 is Msg.SetRolls -> {
-                    model.copy(rolls = msg.rolls.takeLast(5)) to none()
+                    model.copy(
+                        rolls = msg.rolls.takeLast(5)
+                    ) to none()
                 }
                 is Msg.AddRoll -> {
                     val rolls = (model.rolls + msg.roll).takeLast(5)
-                    model.copy(rolls = rolls) to effect {
-                        putHistory(rolls)
-                    }
+                    model.copy(
+                        rolls = rolls
+                    ) to effect { putHistory(rolls) }
                 }
             }
         }
@@ -70,6 +73,7 @@ object Dice {
     val view: View<Model, Props> = { model ->
         Props(
             model.rolls,
+            model.rollCount,
             { Msg.UserShookDevice },
             { Msg.UserClickedRollButton }
         )

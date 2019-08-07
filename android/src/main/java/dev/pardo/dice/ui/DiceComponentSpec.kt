@@ -6,17 +6,13 @@ import com.facebook.litho.Column
 import com.facebook.litho.Component
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.Row
-import com.facebook.litho.StateValue
 import com.facebook.litho.Transition
 import com.facebook.litho.animation.AnimatedProperties
 import com.facebook.litho.annotations.LayoutSpec
-import com.facebook.litho.annotations.OnCreateInitialState
 import com.facebook.litho.annotations.OnCreateLayout
 import com.facebook.litho.annotations.OnCreateTransition
 import com.facebook.litho.annotations.OnEvent
-import com.facebook.litho.annotations.OnUpdateState
 import com.facebook.litho.annotations.Prop
-import com.facebook.litho.annotations.State
 import com.facebook.litho.widget.Image
 import com.facebook.litho.widget.Text
 import com.facebook.litho.widget.VerticalGravity
@@ -30,25 +26,16 @@ import oolong.Dispatch
 @LayoutSpec
 object DiceComponentSpec {
 
-    @OnCreateInitialState
-    fun onCreateInitialState(
-        context: ComponentContext,
-        rollCount: StateValue<Int>
-    ) {
-        rollCount.set(0)
-    }
-
     @OnCreateLayout
     fun onCreateLayout(
         context: ComponentContext,
         @Prop props: Dice.Props,
-        @Prop dispatch: Dispatch<Dice.Msg>,
-        @State rollCount: Int
+        @Prop dispatch: Dispatch<Dice.Msg>
     ): Component {
         return Column.create(context)
             .clickHandler(DiceComponent.onClickRollButton(context))
             .child(help(context, props.rolls))
-            .child(roll(context, props.rolls, rollCount))
+            .child(roll(context, props.rolls, props.rollCount))
             .child(history(context, props.rolls))
             .build()
     }
@@ -79,11 +66,6 @@ object DiceComponentSpec {
         )
     }
 
-    @OnUpdateState
-    fun onUpdateRollCount(rollCount: StateValue<Int>) {
-        rollCount.set(rollCount.get()!! + 1)
-    }
-
     @OnEvent(ClickEvent::class)
     fun onClickRollButton(
         context: ComponentContext,
@@ -91,7 +73,6 @@ object DiceComponentSpec {
         @Prop dispatch: Dispatch<Dice.Msg>
     ) {
         dispatch(props.onUserClickedRollButton())
-        DiceComponent.onUpdateRollCount(context)
     }
 
     private fun help(context: ComponentContext, rolls: List<Roll>): Component.Builder<*>? {

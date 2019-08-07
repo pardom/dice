@@ -10,9 +10,6 @@ import SwiftUI
 import common
 
 struct ContentView: View {
-    var props: Dice.Props
-    var dispatch: Dice.Msg
-    
     var body: some View {
         Text("Hello World")
     }
