@@ -38,7 +38,7 @@ object DiceComponentSpec {
         return Column.create(context)
             .backgroundRes(R.color.colorPrimary)
             .child(header(context, props.rolls))
-            .child(body(context, props.rolls, props.rollCount))
+            .child(content(context, props.rolls, props.rollCount))
             .child(footer(context, props.rolls))
             .build()
     }
@@ -130,7 +130,7 @@ object DiceComponentSpec {
             .drawableRes(R.drawable.ic_reset_24dp)
     }
 
-    private fun body(context: ComponentContext, rolls: List<Roll>, rollCount: Int): Component.Builder<*>? {
+    private fun content(context: ComponentContext, rolls: List<Roll>, rollCount: Int): Component.Builder<*>? {
         val rollFace = rolls.lastOrNull()?.face ?: 3
         return Image.create(context)
             .flexGrow(1F)

@@ -16,12 +16,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-        if let windowScene = scene as? UIWindowScene {
-            let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: ContentView())
-            self.window = window
-            window.makeKeyAndVisible()
+        let getHistory = { () -> [Roll] in
+            return []
         }
+        
+        let putHistory = { (history: [Roll]) -> KotlinUnit in
+            return KotlinUnit()
+        }
+        
+        let render = { (props: Dice.Props, dispatch: @escaping (Dice.Msg) -> KotlinUnit) -> Any? in
+            if let windowScene = scene as? UIWindowScene {
+                let window = UIWindow(windowScene: windowScene)
+                window.rootViewController = UIHostingController(rootView: ContentView(props: props, dispatch: dispatch))
+                self.window = window
+                window.makeKeyAndVisible()
+            }
+            return KotlinUnit()
+        }
+        
+        let _ = Dice().runtime(
+            init: Dice().makeInit(getHistory),
+            update: Dice().makeUpdate(putHistory),
+            render: render
+        )
+        
+
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
