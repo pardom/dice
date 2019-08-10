@@ -18,7 +18,7 @@ class DiceTest {
     fun `SetRolls updates roll list`() {
         val rolls = stubRolls(3)
         val update = makeUpdate(putHistory)
-        val model = Model(emptyList())
+        val model = Model(emptyList(), 0)
         val next = update(Msg.SetRolls(rolls), model)
         assertEquals(next.first.rolls, rolls)
     }
@@ -26,7 +26,7 @@ class DiceTest {
     @Test
     fun `AddRoll appends roll to roll list`() {
         val update = makeUpdate(putHistory)
-        val model = Model(emptyList())
+        val model = Model(emptyList(), 0)
 
         val roll1 = stubRoll(1)
         val next1 = update(Msg.AddRoll(roll1), model)

@@ -15,13 +15,13 @@ import kotlin.random.nextInt
 object Dice {
 
     data class Model(
-        val rolls: List<Roll> = emptyList(),
-        val rollCount: Int = 0
+        val rolls: List<Roll>,
+        val rollCount: Int
     )
 
     sealed class Msg {
-        object UserShookDevice : Msg()
         object UserClickedRollButton : Msg()
+        object UserClickedResetButton : Msg()
         data class SetRolls(val rolls: List<Roll>) : Msg()
         data class AddRoll(val roll: Roll) : Msg()
     }
@@ -29,13 +29,13 @@ object Dice {
     data class Props(
         val rolls: List<Roll>,
         val rollCount: Int,
-        val onUserShookDevice: () -> Msg,
-        val onUserClickedRollButton: () -> Msg
+        val onUserClickedRollButton: () -> Msg,
+        val onUserClickedResetButton: () -> Msg
     )
 
     val makeInit: (GetHistory) -> Init<Model, Msg> = { getHistory ->
         {
-            Model() to { dispatch ->
+            Model(emptyList(), 0) to effect { dispatch ->
                 val history = getHistory()
                 dispatch(Msg.SetRolls(history))
             }
@@ -45,26 +45,27 @@ object Dice {
     val makeUpdate: (PutHistory) -> Update<Model, Msg> = { putHistory ->
         { msg, model ->
             when (msg) {
-                Msg.UserShookDevice,
-                Msg.UserClickedRollButton -> {
-                    model.copy(
-                        rollCount = model.rollCount + 1
-                    ) to effect { dispatch ->
-                        delay(100)
+                is Msg.UserClickedRollButton -> {
+                    model.copy(rollCount = model.rollCount + 1) to effect { dispatch ->
                         val roll = Roll(Uuid(), Random.nextInt(1..6))
+                        delay(100)
                         dispatch(Msg.AddRoll(roll))
                     }
                 }
+                is Msg.UserClickedResetButton -> {
+                    val rolls = emptyList<Roll>()
+                    model.copy(rolls = rolls, rollCount = 0) to effect {
+                        putHistory(rolls)
+                    }
+                }
                 is Msg.SetRolls -> {
-                    model.copy(
-                        rolls = msg.rolls.takeLast(5)
-                    ) to none()
+                    model.copy(rolls = msg.rolls.takeLast(5)) to none()
                 }
                 is Msg.AddRoll -> {
                     val rolls = (model.rolls + msg.roll).takeLast(5)
-                    model.copy(
-                        rolls = rolls
-                    ) to effect { putHistory(rolls) }
+                    model.copy(rolls = rolls) to effect {
+                        putHistory(rolls)
+                    }
                 }
             }
         }
@@ -74,8 +75,8 @@ object Dice {
         Props(
             model.rolls,
             model.rollCount,
-            { Msg.UserShookDevice },
-            { Msg.UserClickedRollButton }
+            { Msg.UserClickedRollButton },
+            { Msg.UserClickedResetButton }
         )
     }
 
