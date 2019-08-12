@@ -1,6 +1,5 @@
 package dev.pardo.dice.app
 
-import com.benasher44.uuid.Uuid
 import dev.pardo.dice.app.Dice.Model
 import dev.pardo.dice.app.Dice.Msg
 import dev.pardo.dice.app.Dice.makeUpdate
