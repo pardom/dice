@@ -43,7 +43,6 @@ dependencies {
     implementation(deps.Facebook.Litho.Widget)
     implementation(deps.Kotlin.StdLib.Jvm)
     implementation(deps.Kotlin.Coroutines.Android)
-    implementation(deps.UUID)
 
     debugImplementation(deps.Facebook.Flipper.Debug)
     debugImplementation(deps.Facebook.SoLoader)

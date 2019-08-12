@@ -1,7 +1,6 @@
 package deps
 
 val Oolong = dependency("org.oolong-kt", "oolong", "2.0.1")
-val UUID = dependency("com.benasher44", "uuid", "0.0.3")
 
 object Android {
     val Material = dependency("com.google.android.material", "material", "1.1.0-alpha09")

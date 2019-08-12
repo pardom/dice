@@ -45,8 +45,8 @@ class DiceTest {
         return (1..count).map(::stubRoll)
     }
 
-    private fun stubRoll(face: Int): Roll {
-        return Roll(Uuid(), face)
+    private fun stubRoll(i: Int): Roll {
+        return Roll(i, i)
     }
 
 }

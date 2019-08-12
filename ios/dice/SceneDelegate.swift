@@ -11,16 +11,28 @@ import SwiftUI
 import common
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    
     var window: UIWindow?
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         let getHistory = { () -> [Roll] in
-            return []
+            let value = UserDefaults.standard.string(forKey: "history") ?? ""
+            return value
+                .components(separatedBy: ",")
+                .map { face in Int32(face) }
+                .filter { face in face != nil}
+                .enumerated()
+                .map { (arg) -> Roll in Roll(id: Int32(arg.offset), face: arg.element!) }
         }
         
         let putHistory = { (history: [Roll]) -> KotlinUnit in
+            let value = history
+                .map { roll in String(roll.face) }
+                .joined(separator: ",")
+            
+            UserDefaults.standard.set(value, forKey: "history")
+            
             return KotlinUnit()
         }
         
@@ -40,22 +52,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             render: render
         )
         
-
+        
     }
-
+    
     func sceneDidDisconnect(_ scene: UIScene) {
     }
-
+    
     func sceneDidBecomeActive(_ scene: UIScene) {
     }
-
+    
     func sceneWillResignActive(_ scene: UIScene) {
     }
-
+    
     func sceneWillEnterForeground(_ scene: UIScene) {
     }
-
+    
     func sceneDidEnterBackground(_ scene: UIScene) {
     }
-
+    
 }

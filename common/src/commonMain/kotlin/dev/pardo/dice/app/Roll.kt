@@ -1,8 +1,6 @@
 package dev.pardo.dice.app
 
-import com.benasher44.uuid.Uuid
-
 data class Roll(
-    val id: Uuid,
+    val id: Int,
     val face: Int
 )

@@ -15,50 +15,61 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            Header(rolls: props.rolls)
-            if (props.rolls.count > 0) {
-                Content(rolls: props.rolls, rollCount: props.rollCount)
-            }
+            Header(props: props, dispatch: dispatch)
+            Spacer()
+            Content(props: props, dispatch: dispatch)
+            Spacer()
             Footer(rolls: props.rolls)
         }
     }
     
     struct Header: View {
-        let rolls: [Roll]
+        let props: Dice.Props
+        let dispatch: (Dice.Msg) -> KotlinUnit
         
         var body: some View {
-            HeaderReset()
+            HeaderReset(props: props, dispatch: dispatch)
         }
     }
     
     struct HeaderReset: View {
+        let props: Dice.Props
+        let dispatch: (Dice.Msg) -> KotlinUnit
+        
         var body: some View {
             HStack {
-                Text("reset")
+                Spacer()
+                if !self.props.rolls.isEmpty {
+                    Image(systemName: "clear.fill")
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                        .padding(15)
+                        .tapAction { self.dispatch(self.props.onUserClickedResetButton()) }
+                }
             }
         }
     }
     
     struct Content: View {
-        let rolls: [Roll]
-        let rollCount: Int32
+        let props: Dice.Props
+        let dispatch: (Dice.Msg) -> KotlinUnit
         
         var body: some View {
-            Text("Last Roll")
+            Image(systemName: "\(props.rolls.last?.face ?? 3).square")
+                .resizable()
+                .aspectRatio(1.0, contentMode: .fit)
+                .rotationEffect(.degrees(Double(self.props.rollCount) * 360))
+                .tapAction { self.dispatch(self.props.onUserClickedRollButton()) }
         }
     }
     
     struct Footer: View {
         let rolls: [Roll]
         
-        @ViewBuilder
         var body: some View {
-            if (rolls.isEmpty) {
-                FooterHelp()
-            }
-            else {
-                FooterHistory(rolls: rolls)
-            }
+            rolls.isEmpty ?
+                AnyView(FooterHelp()) :
+                AnyView(FooterHistory(rolls: rolls))
         }
     }
     
@@ -72,15 +83,21 @@ struct ContentView: View {
         let rolls: [Roll]
         
         var body: some View {
-            Text("History")
+            HStack {
+                FooterHistoryRoll(roll: rolls.count > 1 ? rolls.reversed()[1] : nil)
+                FooterHistoryRoll(roll: rolls.count > 2 ? rolls.reversed()[2] : nil)
+                FooterHistoryRoll(roll: rolls.count > 3 ? rolls.reversed()[3] : nil)
+            }
         }
     }
     
     struct FooterHistoryRoll: View {
-        let roll: Roll
+        let roll: Roll?
         
         var body: some View {
-            Spacer()
+            Image(systemName: "\(roll?.face ?? 0).square")
+                .resizable()
+                .frame(width: roll != nil ? 50 : 0, height: 50)
         }
     }
 }

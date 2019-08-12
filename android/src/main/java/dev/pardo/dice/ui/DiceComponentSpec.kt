@@ -169,7 +169,7 @@ object DiceComponentSpec {
             .text("Tap to roll")
             .textAlignment(Layout.Alignment.ALIGN_CENTER)
             .textColorAttr(android.R.attr.textColorPrimary)
-            .textSizeRes(R.dimen.abc_text_size_display_1_material)
+            .textSizeRes(R.dimen.abc_text_size_title_material)
             .transitionKey("help")
     }
 

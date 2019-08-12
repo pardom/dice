@@ -1,6 +1,5 @@
 package dev.pardo.dice.app
 
-import com.benasher44.uuid.Uuid
 import dev.pardo.dice.data.GetHistory
 import dev.pardo.dice.data.PutHistory
 import kotlinx.coroutines.delay
@@ -47,7 +46,7 @@ object Dice {
             when (msg) {
                 is Msg.UserClickedRollButton -> {
                     model.copy(rollCount = model.rollCount + 1) to effect { dispatch ->
-                        val roll = Roll(Uuid(), Random.nextInt(1..6))
+                        val roll = Roll(model.rollCount, Random.nextInt(1..6))
                         delay(100)
                         dispatch(Msg.AddRoll(roll))
                     }

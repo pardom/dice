@@ -2,7 +2,6 @@ package dev.pardo.dice
 
 import android.content.Context
 import android.preference.PreferenceManager
-import com.benasher44.uuid.Uuid
 import dev.pardo.dice.app.Dice
 import dev.pardo.dice.app.Roll
 import dev.pardo.dice.data.GetHistory
@@ -15,13 +14,12 @@ class Inject(context: Context) {
     private val getHistory: GetHistory = {
         prefs.getString("history", "")
             .split(",")
-            .filter { !it.isBlank() }
-            .map { it.split(":") }
-            .map { Roll(Uuid.parse(it[0])!!, it[1].toInt()) }
+            .filter(String::isNotBlank)
+            .mapIndexed { id, face -> Roll(id, face.toInt()) }
     }
     private val putHistory: PutHistory = { history ->
         val serialized = history
-            .map { roll -> "${roll.id}:${roll.face}" }
+            .map { roll -> "${roll.face}" }
             .joinToString(",")
 
         prefs.edit()
