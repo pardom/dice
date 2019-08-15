@@ -21,13 +21,6 @@ object Facebook {
         val Core = artifact("litho-core")
         val Processor = artifact("litho-processor")
         val Widget = artifact("litho-widget")
-
-        object Sections {
-            val Annotations = artifact("litho-sections-annotations")
-            val Core = artifact("litho-sections-core")
-            val Processor = artifact("litho-sections-processor")
-            val Widget = artifact("litho-sections-widget")
-        }
     }
 
     val SoLoader = dependency("com.facebook.soloader", "soloader", "0.6.1")
